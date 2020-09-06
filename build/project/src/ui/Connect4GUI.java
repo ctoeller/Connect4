@@ -2,7 +2,6 @@ package ui;
 
 import core.*;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -11,14 +10,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.application.Application;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.Property;
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
-import java.awt.event.ActionEvent;
-import java.util.concurrent.TimeUnit;
 import javafx.util.Duration; 
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
@@ -80,8 +73,7 @@ public class Connect4GUI extends Application {
 	
 	@Override
 	public void start(Stage primaryStage)  {
-		serverGame = false;
-        promptGUI();
+        promptComputerPlayer();
 	}
 	
 	/**
@@ -90,84 +82,33 @@ public class Connect4GUI extends Application {
 	public void startGame()  {
 		initBoard();
 		
-        
 		bt1.setOnAction(w -> {
 			handleSelection(0);
-			checkIfWinner();
-
-			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
-				boolean validEntry = false;
-				while (validEntry == false) {
-					validEntry = handleSelection(1);
-				}
-				checkIfWinner();
-			}
+			disableButtons();
 		});
 		bt2.setOnAction(w -> {
 			handleSelection(1);
-			checkIfWinner();
-			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
-				boolean validEntry = false;
-				while (validEntry == false) {
-					validEntry = handleSelection(1);
-				}
-				checkIfWinner();
-			}
+			disableButtons();
 		});
 		bt3.setOnAction(w -> {
 			handleSelection(2);
-			checkIfWinner();
-			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
-				boolean validEntry = false;
-				while (validEntry == false) {
-					validEntry = handleSelection(1);
-				}
-				checkIfWinner();
-			}
+			disableButtons();
 		});
 		bt4.setOnAction(w -> {
 			handleSelection(3);
-			checkIfWinner();
-			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
-				boolean validEntry = false;
-				while (validEntry == false) {
-					validEntry = handleSelection(1);
-				}
-				checkIfWinner();
-			}
+			disableButtons();
 		});
 		bt5.setOnAction(w -> {
 			handleSelection(4);
-			checkIfWinner();
-			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
-				boolean validEntry = false;
-				while (validEntry == false) {
-					validEntry = handleSelection(1);
-				}
-				checkIfWinner();
-			}
+			disableButtons();
 		});
 		bt6.setOnAction(w -> {
 			handleSelection(5);
-			checkIfWinner();
-			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
-				boolean validEntry = false;
-				while (validEntry == false) {
-					validEntry = handleSelection(1);
-				}
-				checkIfWinner();
-			}
+			disableButtons();
 		});
 		bt7.setOnAction(w -> {
 			handleSelection(6);
-			checkIfWinner();
-			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
-				boolean validEntry = false;
-				while (validEntry == false) {
-					validEntry = handleSelection(1);
-				}
-				checkIfWinner();
-			}
+			disableButtons();
 		});
 	}
 	
@@ -204,6 +145,11 @@ public class Connect4GUI extends Application {
 		} else {
 			turnLabel.setText(winner.getPlayerName() + " Wins!!!");
 		}
+		disableButtons();
+		playAgainPrompt();
+	}
+	
+	public void disableButtons() {
 		bt1.setDisable(true);
 		bt2.setDisable(true);
 		bt3.setDisable(true);
@@ -211,37 +157,45 @@ public class Connect4GUI extends Application {
 		bt5.setDisable(true);
 		bt6.setDisable(true);
 		bt7.setDisable(true);
-		playAgainPrompt();
+	}
+	
+	public void enableButtons() {
+		bt1.setDisable(false);
+		bt2.setDisable(false);
+		bt3.setDisable(false);
+		bt4.setDisable(false);
+		bt5.setDisable(false);
+		bt6.setDisable(false);
+		bt7.setDisable(false);
 	}
 	
 	/**
 	 * Receives the input data from the buttons that the user pushed. If it is a computer players turn, 
-	 * this method will perform the computer's move as well.
+	 * this method will perform the computer's move as well. 
 	 * @param column
 	 * @return
 	 */
-	public boolean handleSelection(int column) {
-		boolean validEntry;
-		int row;
-		if (turnPlayer == board.player1) {
-			row = board.player1.takeTurn(column);
-		} else if (turnPlayer == board.player2) {
-			row = board.player2.takeTurn(column);
-		} else {
-			row = board.computerPlayer.takeTurn();
-			column = board.computerPlayer.getChosenCol();
-		}
-		if (row == -1) {
-			validEntry = false;
-			turnLabel.setText("Column full. Try again...");
-        	System.out.println("Column entered is full. You must choose a different column.");
-        } else {
-        	validEntry = true;
-			addVisualPiece(row, column);
-			switchPlayer();
-			
-        }
-		return validEntry;
+	public boolean handleSelection(int column) {	
+	
+			boolean validEntry;
+			int row;
+			if (turnPlayer == board.player1) {
+				row = board.player1.takeTurn(column);
+			} else if (turnPlayer == board.player2) {
+				row = board.player2.takeTurn(column);
+			} else {
+				row = board.computerPlayer.takeTurn();
+				column = board.computerPlayer.getChosenCol();
+			}
+			if (row == -1) {
+				validEntry = false;
+				turnLabel.setText("Column full. Try again...");
+	        	System.out.println("Column entered is full. You must choose a different column.");
+	        } else {
+	        	validEntry = true;
+	        	addVisualPiece(row, column);
+	        }
+			return validEntry;	
 	}
 	/**
 	 * Alternates the active player when called and displays the next player who is up to take a turn.
@@ -254,7 +208,6 @@ public class Connect4GUI extends Application {
 			} else {
 				turnPlayer = board.computerPlayer;
 				turnLabel.setText("Computer Turn");
-
 			}
 		} else {
 			turnPlayer = board.player1;
@@ -262,7 +215,8 @@ public class Connect4GUI extends Application {
 		}
 	}
 	/**
-	 * Opens a dialog box asking the user if they would like to use the GUI or text console.
+	 * Opens a dialog box asking the user if they would like to use the GUI or text console. 
+	 * Disabled in current version.
 	 */
 	public void promptGUI() {
 		Stage stage2 = new Stage();
@@ -297,7 +251,6 @@ public class Connect4GUI extends Application {
 		btGUI.setOnAction(t -> {
 			stage2.close();
 			promptComputerPlayer();
-			
 			return;
 		});
 	}
@@ -384,11 +337,9 @@ public class Connect4GUI extends Application {
 			Stage tempStage = (Stage) bpMain.getScene().getWindow();
 			tempStage.close();
 			startGame();
-			
 			return;
 		});
 		btNo2.setOnAction(t -> {
-
 			newStage2.close();
 			Stage tempStage = (Stage) bpMain.getScene().getWindow();
 			tempStage.close();
@@ -400,6 +351,7 @@ public class Connect4GUI extends Application {
 	 * Creates the main GUI window containing the game board and button components
 	 */
 	public void displayBoard() {
+		
 		Stage stage = new Stage();
 		
 		bpMain = new BorderPane();
@@ -407,6 +359,7 @@ public class Connect4GUI extends Application {
 		bpMain.setPrefHeight(600);
 		bpMain.setMaxHeight(600);
 		bpMain.setMinHeight(600);
+		bpMain.setStyle("-fx-background-color: #000000;");
 		centerPane = new Pane();
 		centerPane.prefWidthProperty().bind(bpMain.prefHeightProperty().subtract(100));
 		centerPane.prefHeightProperty().bind(bpMain.prefHeightProperty().subtract(100));
@@ -418,41 +371,48 @@ public class Connect4GUI extends Application {
 		colButtonPane = new FlowPane();
 		colButtonPane.setPrefHeight(90);
 		colButtonPane.setMaxHeight(90);
-		bt1 = new Button("1");
+		bt1 = new Button("");
 		bt1.setPrefHeight(40);
 		bt1.setPrefWidth(40);
 		bt1.setStyle("-fx-font-size: 2em; ");
 		bt1.setAlignment(Pos.CENTER);
-		bt2 = new Button("2");
+		bt2 = new Button("");
 		bt2.setPrefHeight(40);
 		bt2.setPrefWidth(40);
 		bt2.setStyle("-fx-font-size: 2em; ");
 		bt2.setAlignment(Pos.CENTER);
-		bt3 = new Button("3");
+		bt3 = new Button("");
 		bt3.setPrefHeight(40);
 		bt3.setPrefWidth(40);
 		bt3.setStyle("-fx-font-size: 2em; ");
 		bt3.setAlignment(Pos.CENTER);
-		bt4 = new Button("4");
+		bt4 = new Button("");
 		bt4.setPrefHeight(40);
 		bt4.setPrefWidth(40);
 		bt4.setStyle("-fx-font-size: 2em; ");
 		bt4.setAlignment(Pos.CENTER);
-		bt5 = new Button("5");
+		bt5 = new Button("");
 		bt5.setPrefHeight(40);
 		bt5.setPrefWidth(40);
 		bt5.setStyle("-fx-font-size: 2em; ");
 		bt5.setAlignment(Pos.CENTER);
-		bt6 = new Button("6");
+		bt6 = new Button("");
 		bt6.setPrefHeight(40);
 		bt6.setPrefWidth(40);
 		bt6.setStyle("-fx-font-size: 2em; ");
 		bt6.setAlignment(Pos.CENTER);
-		bt7 = new Button("7");
+		bt7 = new Button("");
 		bt7.setPrefHeight(40);
 		bt7.setPrefWidth(40);
 		bt7.setStyle("-fx-font-size: 2em; ");
 		bt7.setAlignment(Pos.CENTER);
+		bt1.getStyleClass().add("big-yellow");
+		bt2.getStyleClass().add("big-yellow");
+		bt3.getStyleClass().add("big-yellow");
+		bt4.getStyleClass().add("big-yellow");
+		bt5.getStyleClass().add("big-yellow");
+		bt6.getStyleClass().add("big-yellow");
+		bt7.getStyleClass().add("big-yellow");
 		colButtonPane.getChildren().add(bt1);
 		colButtonPane.getChildren().add(bt2);
 		colButtonPane.getChildren().add(bt3);
@@ -473,6 +433,8 @@ public class Connect4GUI extends Application {
 		r1 = new Rectangle(15, 450);
 		r1.setX(14);
 		r1.setY(20);
+		r1.setArcWidth(15);
+		r1.setArcHeight(15);
 		r2 = new Rectangle(15, 450);
 		r2.setX(94);
 		r2.setY(20);
@@ -494,12 +456,18 @@ public class Connect4GUI extends Application {
 		r8 = new Rectangle(15, 450);
 		r8.setX(574);
 		r8.setY(20);
+		r8.setArcWidth(15);
+		r8.setArcHeight(15);
 		r9 = new Rectangle(575, 15);
 		r9.setX(14);
 		r9.setY(20);
+		r9.setArcWidth(15); 
+		r9.setArcHeight(15);
 		r10 = new Rectangle(575, 15);
 		r10.setX(14);
 		r10.setY(455);
+		r10.setArcWidth(15);
+		r10.setArcHeight(15);
 		r11 = new Rectangle(575, 15);
 		r11.setX(14);
 		r11.setY(238);
@@ -515,6 +483,24 @@ public class Connect4GUI extends Application {
 		r15 = new Rectangle(575, 15);
 		r15.setX(14);
 		r15.setY(384);
+		r15.setArcWidth(15);
+		r15.setArcHeight(15);
+		r1.setFill(Color.web("#07689f", 1.0));
+		r2.setFill(Color.web("#07689f", 1.0));
+		r3.setFill(Color.web("#07689f", 1.0));
+		r4.setFill(Color.web("#07689f", 1.0));
+		r5.setFill(Color.web("#07689f", 1.0));
+		r6.setFill(Color.web("#07689f", 1.0));
+		r7.setFill(Color.web("#07689f", 1.0));
+		r8.setFill(Color.web("#07689f", 1.0));
+		r9.setFill(Color.web("#07689f", 1.0));
+		r10.setFill(Color.web("#07689f", 1.0));
+		r11.setFill(Color.web("#07689f", 1.0));
+		r12.setFill(Color.web("#07689f", 1.0));
+		r13.setFill(Color.web("#07689f", 1.0));
+		r14.setFill(Color.web("#07689f", 1.0));
+		r15.setFill(Color.web("#07689f", 1.0));
+		
 		centerPane.getChildren().add(r1);
 		centerPane.getChildren().add(r2);
 		centerPane.getChildren().add(r3);
@@ -539,18 +525,19 @@ public class Connect4GUI extends Application {
 		bpMain.setTop(topPane);
 		title = new Label("CONNECT FOUR");
 		title.setRotate(-90);
-		title.setStyle("-fx-font-size: 4em;" );
+		title.setStyle("-fx-font-size: 4em; -fx-text-fill: #07689f;" );
 		leftPane.getChildren().add(title);
 		title.setTranslateX(-105);
 		title.setTranslateY(200);
 		turnLabel = new Label("Player 1 Turn:");
-		turnLabel.setStyle("-fx-font-size: 3em;");
+		turnLabel.setStyle("-fx-font-size: 3em; -fx-text-fill: #07689f");
 		topPane.setCenter(turnLabel);
 		Scene scene = new Scene(bpMain);
+		scene.getStylesheets().add("ui/styles.css");
 		stage.setScene(scene);
 		stage.show();
 		
-		//initialize board grid matrix
+		// Initialize board grid matrix for displaying coins
 		for (int i = 0; i < 6; i++) {
 			for (int j =0; j < 7; j++) {
 				for (int x = 0; x < 2; x++) {
@@ -573,27 +560,60 @@ public class Connect4GUI extends Application {
 	public void addVisualPiece(int row, int column) {
 		double yInc = 73;
 		
+		// Set Coin Colors
 		Color fill;
 		if (turnPlayer == board.player1) {
-			fill = Color.RED;
-		} else {
-			fill = Color.BLUE;
-		}
-		Circle circle = new Circle(boardCoord[row][column][0], boardCoord[row][column][1]-(73*(row+1)), 36, fill);
+			fill = Color.web("#cd0a0a",1.0);
 
-		centerPane.getChildren().add(circle);
-		circle.toBack();
+		} else {
+			fill = Color.web("#ffc93c",1.0);
+
+		}
+		Color innerFill;
+		if (turnPlayer == board.player1) {
+			innerFill = Color.web("#b80707",1.0);
+
+		} else {
+			innerFill = Color.web("#f0bc35",1.0);
+
+		}
 		
+		// Draw coin
+		Circle circle = new Circle(boardCoord[row][column][0], boardCoord[row][column][1]-(yInc *(row+1)), 36, fill);
+		Circle innerCircle = new Circle(boardCoord[row][column][0], boardCoord[row][column][1]-(yInc *(row+1)), 26, innerFill);
+		Pane coin = new Pane();
+		coin.getChildren().add(innerCircle);
+		coin.getChildren().add(circle);
+		circle.toBack();
+
+		// Add coin to screen
+		centerPane.getChildren().add(coin);
+		coin.toBack();
+		
+		
+		// Animate Coin Drop
 		TranslateTransition translateTransition = new TranslateTransition();
 		translateTransition.setDuration(Duration.millis(1000*(row+1)/6));
-		translateTransition.setNode(circle);
+		translateTransition.setNode(coin);
 		translateTransition.setByY(yInc * (row+1)); 
 		translateTransition.setCycleCount(1);
 		translateTransition.setAutoReverse(false);
-		translateTransition.play();
-
-
+		translateTransition.setDelay(new Duration(300));
 		
+		// Wait for Animation to finish to proceed
+		translateTransition.setOnFinished(e -> {
+			switchPlayer();
+			enableButtons();
+			checkIfWinner();
+			if (computerPlayer == true && turnPlayer==board.computerPlayer && board.isWinner() == false && board.isFull() == false) {
+				boolean validEntry = false;
+				while (validEntry == false) {
+					disableButtons();
+					validEntry = handleSelection(1);
+				}
+			} 
+		});
+		translateTransition.play();	
 	}
 	
 	/**
@@ -603,5 +623,4 @@ public class Connect4GUI extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
 }

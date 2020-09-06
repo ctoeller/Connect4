@@ -1,0 +1,24 @@
+.big-yellow {
+    -fx-background-color: 
+        #41444b
+        rgba(0,0,0,0.05),
+        linear-gradient(#dcca8a, #c7a740),
+        linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+        linear-gradient(#ffdd4f, #dbab2e);
+    -fx-background-insets: 0,5,5,4,5,5,6,7;
+    -fx-background-radius: 50;
+    -fx-padding: 0 15 0 15;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 18px;
+    -fx-text-fill: #311c09;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.1) , 2, 0.0 , 0 , 1);
+}
+
+.big-yellow:pressed{
+	    -fx-background-color: 
+        #52575d
+        rgba(0,0,0,0.05),
+        linear-gradient(#dcca8a, #c7a740),
+        linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+        linear-gradient(#f6ebbe, #fddb3a);
+}
